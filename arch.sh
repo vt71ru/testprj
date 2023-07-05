@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
 CPU_VENDOR=""
+UCODE=""
 
 init() {
 echo -e "Begin...................................................."
 
 if lscpu | grep -q "GenuineIntel"; then
         CPU_VENDOR="intel"
+        UCODE="intel-ucode"
     elif lscpu | grep -q "AuthenticAMD"; then
         CPU_VENDOR="amd"
+        UCODE="amd-ucode"
     else
         CPU_VENDOR=""
 fi
@@ -19,6 +22,7 @@ fi
 main() {
 
 echo "$CPU_VENDOR  C P U"
+echo "$UCODE"
 
 echo "Please enter EFI paritition: (example /dev/sda1 or /dev/nvme0n1p1)"
 read EFI
@@ -67,7 +71,7 @@ echo "--------------------------------------"
 echo "-- Setup Dependencies               --"
 echo "--------------------------------------"
 
-pacstrap /mnt networkmanager network-manager-applet wireless_tools nano intel-ucode bluez bluez-utils blueman git --noconfirm --needed
+pacstrap /mnt networkmanager network-manager-applet wireless_tools nano $ucode bluez bluez-utils blueman git --noconfirm --needed
 
 # fstab
 genfstab -U /mnt >> /mnt/etc/fstab
