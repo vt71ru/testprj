@@ -12,11 +12,14 @@ if lscpu | grep -q "GenuineIntel"; then
     else
         CPU_VENDOR=""
 fi
-echo "$CPU_VENDOR environment variable value"
+
 }
 
 
 main() {
+
+echo "$CPU_VENDOR  C P U"
+
 echo "Please enter EFI paritition: (example /dev/sda1 or /dev/nvme0n1p1)"
 read EFI
 
