@@ -2,8 +2,13 @@
 
 CPU_VENDOR=""
 UCODE=""
+SYSTEM_DRIVE=""
+EFI=""
+ROOT=""
+SWAP=""
 
 init() {
+setfont ter-120n
 echo -e "Begin...................................................."
 
 if lscpu | grep -q "GenuineIntel"; then
@@ -15,14 +20,22 @@ if lscpu | grep -q "GenuineIntel"; then
     else
         CPU_VENDOR=""
 fi
-
 }
-
 
 main() {
 
-echo "$CPU_VENDOR  C P U"
-echo "$UCODE"
+lsblk
+echo "Enter the drive to install arch linux on it. (/dev/...)"
+echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
+read SYSTEM_DRIVE
+sleep 2s
+
+echo "Getting ready for creating partitions!"
+echo "root and boot partitions are mandatory."
+echo "home and swap partitions are optional but recommended!"
+echo "Also, you can create a separate partition for timeshift backup (optional)!"
+echo "Getting ready in 5 seconds"
+sleep 5s
 
 echo "Please enter EFI paritition: (example /dev/sda1 or /dev/nvme0n1p1)"
 read EFI
@@ -47,6 +60,14 @@ echo "4. NoDesktop"
 read DESKTOP
 
 # make filesystems
+
+echo "Getting ready for creating partitions!"
+echo "root and boot partitions are mandatory."
+echo "home and swap partitions are optional but recommended!"
+echo "Also, you can create a separate partition for timeshift backup (optional)!"
+echo "Getting ready in 9 seconds"
+sleep 9s
+
 echo -e "\nCreating Filesystems...\n"
 
 mkfs.vfat -F32 -n "EFISYSTEM" "${EFI}"
@@ -99,11 +120,22 @@ echo "-------------------------------------------------"
 echo "Setup Language to US and set locale"
 echo "-------------------------------------------------"
 sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+sed -i 's/^#ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
-echo "LANG=en_US.UTF-8" >> /etc/locale.conf
+echo "LANG=ru_RU.UTF-8 UTF-8" >> /etc/locale.conf
 
 ln -sf /usr/share/zoneinfo/Asia/Kathmandu /etc/localtime
 hwclock --systohc
+
+touch /etc/vconsole.conf
+cat <<EOF > /etc/vconsole.conf
+LOCALE="ru_RU.UTF-8"
+KEYMAP="ru" # Или ru-mab для раскладки с переключением по Ctrl-Shift
+FONT="ter-v32n"
+CONSOLEFONT="ter-v32n" # Можно поэкспериментировать с другими шрифтами ter-v* из /usr/share/kbd/consolefonts
+CONSOLEMAP=""
+USECOLOR="yes"
+EOF
 
 echo "arch" > /etc/hostname
 cat <<EOF > /etc/hosts
