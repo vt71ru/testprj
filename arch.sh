@@ -7,8 +7,10 @@ EFI=""
 ROOT=""
 SWAP=""
 
+$USER=""
+
 init() {
-setfont ter-120n
+setfont ter-118n
 echo -e "Begin...................................................."
 
 if lscpu | grep -q "GenuineIntel"; then
@@ -30,6 +32,7 @@ echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar
 read SYSTEM_DRIVE
 sleep 2s
 
+cfdisk $SYSTEM_DRIVE
 echo "Getting ready for creating partitions!"
 echo "root and boot partitions are mandatory."
 echo "home and swap partitions are optional but recommended!"
@@ -92,7 +95,7 @@ echo "--------------------------------------"
 echo "-- Setup Dependencies               --"
 echo "--------------------------------------"
 
-pacstrap /mnt networkmanager network-manager-applet wireless_tools nano $ucode bluez bluez-utils blueman git --noconfirm --needed
+pacstrap /mnt networkmanager network-manager-applet wireless_tools nano $ucode bluez bluez-utils blueman git wget yajl --noconfirm --needed
 
 # fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -122,7 +125,7 @@ echo "-------------------------------------------------"
 sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 sed -i 's/^#ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
-echo "LANG=ru_RU.UTF-8 UTF-8" >> /etc/locale.conf
+echo "LANG=ru_RU.UTF-8" >> /etc/locale.conf
 
 ln -sf /usr/share/zoneinfo/Asia/Kathmandu /etc/localtime
 hwclock --systohc
@@ -131,8 +134,8 @@ touch /etc/vconsole.conf
 cat <<EOF > /etc/vconsole.conf
 LOCALE="ru_RU.UTF-8"
 KEYMAP="ru" # Или ru-mab для раскладки с переключением по Ctrl-Shift
-FONT="ter-v32n"
-CONSOLEFONT="ter-v32n" # Можно поэкспериментировать с другими шрифтами ter-v* из /usr/share/kbd/consolefonts
+FONT="ter-v24n"
+CONSOLEFONT="ter-v24n" # Можно поэкспериментировать с другими шрифтами ter-v* из /usr/share/kbd/consolefonts
 CONSOLEMAP=""
 USECOLOR="yes"
 EOF
