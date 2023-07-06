@@ -84,12 +84,15 @@ mkdir /mnt/boot
 mount -t vfat "${EFI}" /mnt/boot/
 
 echo "--------------------------------------"
+echo "-- Setting up $iso mirrors for faster downloads
+echo "--------------------------------------"
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.old
+reflector -a 48 -c $iso -f 5 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
+
+echo "--------------------------------------"
 echo "-- INSTALLING Arch Linux BASE on Main Drive       --"
 echo "--------------------------------------"
-pacstrap /mnt base base-devel --noconfirm --needed
-
-# kernel
-pacstrap /mnt linux linux-firmware --noconfirm --needed
+pacstrap /mnt base base-devel  linux linux-firmware --noconfirm --needed
 
 echo "--------------------------------------"
 echo "-- Setup Dependencies               --"
