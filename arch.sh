@@ -10,6 +10,11 @@ SWAP=""
 $USER=""
 
 init() {
+if [[ $(id -u) == 0 ]]; then
+      echo "Don't run this script as 'root'!"
+      exit 1
+fi
+
 setfont ter-118n
 echo -e "Begin...................................................."
 
@@ -87,7 +92,7 @@ echo "--------------------------------------"
 echo "-- Setting up $iso mirrors for faster downloads
 echo "--------------------------------------"
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.old
-reflector -a 48 -c $iso -f 5 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
+reflector --latest 200  --sort rate --save /etc/pacman.d/mirrorlist
 
 echo "--------------------------------------"
 echo "-- INSTALLING Arch Linux BASE on Main Drive       --"
@@ -154,6 +159,17 @@ echo "-------------------------------------------------"
 echo "Display and Audio Drivers"
 echo "-------------------------------------------------"
 
+gpu_type=$(lspci)
+if grep -E "NVIDIA|GeForce" <<< ${gpu_type}; then
+    pacman -S --noconfirm --needed nvidia
+	nvidia-utils
+elif lspci | grep 'VGA' | grep -E "Radeon|AMD"; then
+    pacman -S --noconfirm --needed xf86-video-amdgpu
+elif grep -E "Integrated Graphics Controller" <<< ${gpu_type}; then
+    pacman -S --noconfirm --needed libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils lib32-mesa
+elif grep -E "Intel Corporation UHD" <<< ${gpu_type}; then
+    pacman -S --needed --noconfirm libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils lib32-mesa
+fi
 pacman -S xorg pulseaudio --noconfirm --needed
 
 systemctl enable NetworkManager bluetooth
