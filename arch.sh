@@ -6,6 +6,7 @@ SYSTEM_DRIVE=""
 EFI=""
 ROOT=""
 SWAP=""
+ROOT_PASSWORD=""
 
 init() {
 
@@ -47,6 +48,9 @@ read SWAP
 
 echo "Please enter Root(/) paritition: (example /dev/sda3)"
 read ROOT 
+
+echo "Please password for root(superuser)"
+read ROOT_PASSWORD
 
 echo "Please enter your username"
 read USER 
@@ -118,6 +122,8 @@ EOF
 
 
 cat <<REALEND > /mnt/next.sh
+echo "Change password to root...."
+echo root:$ROOT_PASSWORD | chpasswd
 useradd -m $USER
 usermod -aG wheel,storage,power,audio $USER
 echo $USER:$PASSWORD | chpasswd
@@ -138,8 +144,8 @@ touch /etc/vconsole.conf
 cat <<EOF > /etc/vconsole.conf
 LOCALE="ru_RU.UTF-8"
 KEYMAP="ru" # Или ru-mab для раскладки с переключением по Ctrl-Shift
-FONT="ter-v24n"
-CONSOLEFONT="ter-v24n" # Можно поэкспериментировать с другими шрифтами ter-v* из /usr/share/kbd/consolefonts
+FONT="cyr-sun16"
+CONSOLEFONT="cyr-sun16" # Можно поэкспериментировать с другими шрифтами ter-v* из /usr/share/kbd/consolefonts
 CONSOLEMAP=""
 USECOLOR="yes"
 EOF
@@ -155,17 +161,6 @@ echo "-------------------------------------------------"
 echo "Display and Audio Drivers"
 echo "-------------------------------------------------"
 
-#gpu_type=$(lspci)
-#if grep -E "NVIDIA|GeForce" <<< ${gpu_type}; then
-#    pacman -S --noconfirm --needed nvidia
-#	nvidia-utils
-#elif lspci | grep 'VGA' | grep -E "Radeon|AMD"; then
-#    pacman -S --noconfirm --needed xf86-video-amdgpu
-#elif grep -E "Integrated Graphics Controller" <<< ${gpu_type}; then
-#    pacman -S --noconfirm --needed libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils lib32-mesa
-#elif grep -E "Intel Corporation UHD" <<< ${gpu_type}; then
-#    pacman -S --needed --noconfirm libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils lib32-mesa
-#fi
 pacman -S xorg
 systemctl enable NetworkManager bluetooth
 
