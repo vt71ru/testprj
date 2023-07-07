@@ -99,7 +99,7 @@ echo "--------------------------------------"
 echo "-- Setup Dependencies               --"
 echo "--------------------------------------"
 
-pacstrap /mnt networkmanager network-manager-applet wireless_tools nano $ucode bluez bluez-utils blueman git wget yajl --noconfirm --needed
+pacstrap /mnt networkmanager network-manager-applet wireless_tools nano $ucode bluez bluez-utils blueman git wget yajl terminus-font --noconfirm --needed
 
 # fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -131,7 +131,7 @@ sed -i 's/^#ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
 echo "LANG=ru_RU.UTF-8" >> /etc/locale.conf
 
-ln -sf /usr/share/zoneinfo/Asia/Kathmandu /etc/localtime
+ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
 hwclock --systohc
 
 touch /etc/vconsole.conf
