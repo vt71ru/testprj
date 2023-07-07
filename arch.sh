@@ -88,7 +88,7 @@ echo "--------------------------------------------------"
 echo "-- Setting up $iso mirrors for faster downloads---"
 echo "--------------------------------------------------"
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.old
-reflector --latest 200  --sort rate --save /etc/pacman.d/mirrorlist
+reflector --country 'Russia' -f 10  --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 echo "--------------------------------------"
 echo "-- INSTALLING Arch Linux BASE on Main Drive       --"
