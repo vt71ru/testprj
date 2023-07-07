@@ -7,8 +7,6 @@ EFI=""
 ROOT=""
 SWAP=""
 
-$USER=""
-
 init() {
 if [[ $(id -u) == 0 ]]; then
       echo "Don't run this script as 'root'!"
@@ -189,15 +187,6 @@ elif [[ $DESKTOP == '3' ]]
 then
     pacman -S xfce4 xfce4-goodies lightdm lightdm-gtk-greeter --noconfirm --needed
     systemctl enable lightdm
-elif [[ $DESKTOP == '4' ]]
-then
-    pacman -S i3-wm i3lock i3status i3blocks xterm lightdm-gtk-greeter lightdm dmenu
-    systemctl enable lightdm
-elif [[ $DESKTOP == '5' ]]
-then
-    pacman -S lxqt breeze-icons oxygen-icons xdg-utils ttf-freefont leafpad slock
-    systemctl enable sddm
-
 else
     echo "You have choosen to Install Desktop Yourself"
 fi
