@@ -8,10 +8,6 @@ ROOT=""
 SWAP=""
 
 init() {
-if [[ $(id -u) == 0 ]]; then
-      echo "Don't run this script as 'root'!"
-      exit 1
-fi
 
 setfont ter-118n
 echo -e "Begin...................................................."
