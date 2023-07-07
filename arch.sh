@@ -88,9 +88,9 @@ mount -t ext4 "${ROOT}" /mnt
 mkdir /mnt/boot
 mount -t vfat "${EFI}" /mnt/boot/
 
-echo "--------------------------------------"
-echo "-- Setting up $iso mirrors for faster downloads
-echo "--------------------------------------"
+echo "--------------------------------------------------"
+echo "-- Setting up $iso mirrors for faster downloads---"
+echo "--------------------------------------------------"
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.old
 reflector --latest 200  --sort rate --save /etc/pacman.d/mirrorlist
 
@@ -148,7 +148,7 @@ CONSOLEMAP=""
 USECOLOR="yes"
 EOF
 
-echo "arch" > /etc/hostname
+echo "archpc" > /etc/hostname
 cat <<EOF > /etc/hosts
 127.0.0.1	localhost
 ::1			localhost
