@@ -64,7 +64,9 @@ echo "Please choose Your Desktop Environment"
 echo "1. GNOME"
 echo "2. KDE"
 echo "3. XFCE"
-echo "4. NoDesktop"
+echo "4. i3"
+echo "5, lxqt"
+echo "6. NoDesktop"
 read DESKTOP
 
 # make filesystems
@@ -187,6 +189,15 @@ elif [[ $DESKTOP == '3' ]]
 then
     pacman -S xfce4 xfce4-goodies lightdm lightdm-gtk-greeter --noconfirm --needed
     systemctl enable lightdm
+elif [[ $DESKTOP == '4' ]]
+then
+    pacman -S i3-wm i3lock i3status i3blocks xterm lightdm-gtk-greeter lightdm dmenu
+    systemctl enable lightdm
+elif [[ $DESKTOP == '5' ]]
+then
+    pacman -S lxqt breeze-icons oxygen-icons xdg-utils ttf-freefont leafpad slock
+    systemctl enable sddm
+
 else
     echo "You have choosen to Install Desktop Yourself"
 fi
