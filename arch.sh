@@ -7,6 +7,7 @@ EFI=""
 ROOT=""
 SWAP=""
 ROOT_PASSWORD=""
+Hostname=""
 
 init() {
 
@@ -57,6 +58,9 @@ read USER
 
 echo "Please enter your password"
 read PASSWORD 
+
+echo "Please enter hostname*
+read hostname
 
 echo "Please choose Your Desktop Environment"
 echo "1. GNOME"
