@@ -78,7 +78,7 @@ read USER
 echo "Please enter your password"
 read PASSWORD 
 
-echo "Please enter hostname*
+echo "Please enter hostname"
 read HOSTNAME
 
 echo "Please choose Your Desktop Environment"
