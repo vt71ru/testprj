@@ -7,11 +7,30 @@ EFI=""
 ROOT=""
 SWAP=""
 ROOT_PASSWORD=""
-Hostname=""
+HOSTNAME=""
 
 init() {
 
-setfont ter-118n
+# Ставим русскую раскладку
+echo "Setting keyboard layout..."
+loadkeys ru
+
+# Добавим в консоль шрифт, поддерживающий кириллицу
+echo "Setting cyrillic font..."
+setfont cyr-sun16
+
+#Добавляем русскую локаль
+sed -i 's/#ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/g' /etc/locale.gen
+locale-gen
+export LANG=ru_RU.UTF-8
+
+up=`ping -c 1 -q raw.githubusercontent.com`
+case $? in
+0) echo -en "+ \033[32;1;49mInternet is available \033[0m\n";;
+*) echo -en "- \033[31;1;49mWarning! \033[0m\033[31;1;5mInternet not available \033[0m\n"
+   exit;;
+esac
+
 echo -e "Begin...................................................."
 
 if lscpu | grep -q "GenuineIntel"; then
@@ -60,7 +79,7 @@ echo "Please enter your password"
 read PASSWORD 
 
 echo "Please enter hostname*
-read hostname
+read HOSTNAME
 
 echo "Please choose Your Desktop Environment"
 echo "1. GNOME"
@@ -128,6 +147,8 @@ EOF
 cat <<REALEND > /mnt/next.sh
 echo "Change password to root...."
 echo root:$ROOT_PASSWORD | chpasswd
+
+echo "Set new user...."
 useradd -m $USER
 usermod -aG wheel,storage,power,audio $USER
 echo $USER:$PASSWORD | chpasswd
@@ -175,7 +196,8 @@ then
     systemctl enable gdm
 elif [[ $DESKTOP == '2' ]]
 then
-    pacman -S plasma sddm kde-applications --noconfirm --needed
+    #pacman -S plasma sddm kde-applications --noconfirm --needed
+    pacman -S plasma sddm --noconfirm --needed
     systemctl enable sddm
 elif [[ $DESKTOP == '3' ]]
 then
