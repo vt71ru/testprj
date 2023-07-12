@@ -11,6 +11,27 @@ HOSTNAME=""
 
 init() {
 
+if [ "$USER" != "root" ]; then
+    sudo "$0" || (
+        print_error "Please run this script as root\n"
+        exit 1
+    )
+    exit 0
+fi
+
+print_info "Device list: $(find /dev/ -regex "/dev/\([vs]d[a-z]\|nvme[0-9]n[0-9]\)")\n"
+# loop as long as $device is a valid device
+while [ -z "$device" ] || [ ! -e "$device" ] || \
+    ! expr "$device" : '^/dev/\([sv]d[a-z]\|nvme[0-9]n[0-9]\)$' >/dev/null; do
+    print_info "Type the device name ('/dev/' required): "
+    read -r device
+    [ ! -e "$device" ] && print_error "This device doesn't exist\n"
+    if ! expr "$device" : '^/dev/\([sv]d[a-z]\|nvme[0-9]n[0-9]\)$' >/dev/null; then
+        print_error "You should type a device name, not a partition name\n"
+        device=""
+    fi
+done
+
 # Ставим русскую раскладку
 echo "Setting keyboard layout..."
 loadkeys ru
