@@ -216,7 +216,7 @@ echo "-- Bootloader Installation  --"
 echo "--------------------------------------"
 sleep 3s
 pacman -Syy
-pacman -S  grub  --noconfirm --needed
+pacman -S  grub  efibootmgr --noconfirm --needed
 sleep 10s
 grub-install --target=x86_64-efi --efi-directory=/boot    --bootloader-id=ARCH
 sleep 10s
