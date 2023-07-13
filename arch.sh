@@ -9,6 +9,8 @@ SWAP=""
 ROOT_PASSWORD=""
 HOSTNAME=""
 
+BOOTLOADER=""
+
 init() {
 
 if [ "$USER" != "root" ]; then
@@ -19,7 +21,8 @@ if [ "$USER" != "root" ]; then
     exit 0
 fi
 
-print_info "Device list: $(find /dev/ -regex "/dev/\([vs]d[a-z]\|nvme[0-9]n[0-9]\)")\n"
+echo "Device list"
+#print_info "Device list: $(find /dev/ -regex "/dev/\([vs]d[a-z]\|nvme[0-9]n[0-9]\)")\n"
 # loop as long as $device is a valid device
 while [ -z "$device" ] || [ ! -e "$device" ] || \
     ! expr "$device" : '^/dev/\([sv]d[a-z]\|nvme[0-9]n[0-9]\)$' >/dev/null; do
@@ -102,6 +105,11 @@ read PASSWORD
 echo "Please enter hostname"
 read HOSTNAME
 
+echo "Please choose boot loader for you system"
+echo "1. Grub2"
+echo "2. Refind"
+read BOOTLOADER
+
 echo "Please choose Your Desktop Environment"
 echo "1. GNOME"
 echo "2. KDE"
@@ -155,14 +163,14 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo "--------------------------------------"
 echo "-- Bootloader Installation  --"
 echo "--------------------------------------"
-bootctl install --path /mnt/boot
-echo "default arch.conf" >> /mnt/boot/loader/loader.conf
-cat <<EOF > /mnt/boot/loader/entries/arch.conf
-title Arch Linux
-linux /vmlinuz-linux
-initrd /initramfs-linux.img
-options root=${ROOT} rw
-EOF
+#bootctl install --path /mnt/boot
+#echo "default arch.conf" >> /mnt/boot/loader/loader.conf
+#cat <<EOF > /mnt/boot/loader/entries/arch.conf
+#title Arch Linux
+#linux /vmlinuz-linux
+#initrd /initramfs-linux.img
+#options root=${ROOT} rw
+#EOF
 
 
 cat <<REALEND > /mnt/next.sh
