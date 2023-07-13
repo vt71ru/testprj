@@ -163,11 +163,13 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo "--------------------------------------"
 echo "-- Bootloader Installation  --"
 echo "--------------------------------------"
-
-pacman -S --noconfirm grub efibootmgr
+sleep 3s
+pacman -S  grub  --noconfirm --needed
+sleep 10s
 grub-install --target=x86_64-efi --efi-directory=/boot    --bootloader-id=ARCH
+sleep 10s
 grub-mkconfig -o /boot/grub/grub.cfg
-
+sleep 10s
 
 #bootctl install --path /mnt/boot
 #echo "default arch.conf" >> /mnt/boot/loader/loader.conf
