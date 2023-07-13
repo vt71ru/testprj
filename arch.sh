@@ -159,11 +159,15 @@ pacstrap /mnt networkmanager network-manager-applet wireless_tools nano $ucode b
 
 # fstab
 genfstab -U /mnt >> /mnt/etc/fstab
+sleep 10s
+cat //mnt/etc/fstab
+sleep 10s
 
 echo "--------------------------------------"
 echo "-- Bootloader Installation  --"
 echo "--------------------------------------"
 sleep 3s
+pacman -Syy
 pacman -S  grub  --noconfirm --needed
 sleep 10s
 grub-install --target=x86_64-efi --efi-directory=/boot    --bootloader-id=ARCH
