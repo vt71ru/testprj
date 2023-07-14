@@ -215,6 +215,7 @@ echo "--------------------------------------"
 echo "-- Bootloader Installation  --"
 echo "--------------------------------------"
 sleep 5s
+sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 5/g' /etc/pacman.conf
 pacman -Syy
 pacman -S  grub  efibootmgr os-prober --noconfirm --needed
 sleep 5s
