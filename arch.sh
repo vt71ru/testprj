@@ -214,14 +214,15 @@ EOF
 echo "--------------------------------------"
 echo "-- Bootloader Installation  --"
 echo "--------------------------------------"
-sleep 3s
+sleep 5s
 pacman -Syy
-pacman -S  grub  efibootmgr --noconfirm --needed
-sleep 10s
+pacman -S  grub  efibootmgr os-prober --noconfirm --needed
+sleep 5s
 grub-install --target=x86_64-efi --efi-directory=/boot    --bootloader-id=ARCH
-sleep 10s
+sleep 5s
+sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
-sleep 10s
+sleep 5s
 
 echo "-------------------------------------------------"
 echo "Display and Audio Drivers"
