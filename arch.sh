@@ -160,8 +160,6 @@ pacstrap /mnt networkmanager network-manager-applet wireless_tools nano $ucode b
 # fstab
 genfstab -U /mnt >> /mnt/etc/fstab
 sleep 10s
-cat //mnt/etc/fstab
-sleep 10s
 
 #bootctl install --path /mnt/boot
 #echo "default arch.conf" >> /mnt/boot/loader/loader.conf
@@ -210,12 +208,17 @@ cat <<EOF > /etc/hosts
 ::1			localhost
 127.0.1.1	arch.localdomain	arch
 EOF
-
 echo "--------------------------------------"
-echo "-- Bootloader Installation  --"
+echo "-- Edit pacman.conf                 --"
 echo "--------------------------------------"
 sleep 5s
 sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 5/g' /etc/pacman.conf
+sed -i 's/#[multilib]/[multilib]/g' /etc/pacman.conf
+sed -i 's/#Include = /etc/pacman.d/mirrorlist/Include = /etc/pacman.d/mirrorlist/g'  /etc/pacman.conf
+echo "--------------------------------------"
+echo "-- Bootloader Installation          --"
+echo "--------------------------------------"
+
 pacman -Syy
 pacman -S  grub  efibootmgr os-prober --noconfirm --needed
 sleep 5s
