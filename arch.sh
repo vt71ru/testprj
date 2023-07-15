@@ -158,7 +158,7 @@ cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.old
 reflector --country 'Russia' -f 10  --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 echo "--------------------------------------"
-echo "-- INSTALLING Arch Linux BASE on Main Drive       --"
+echo -en "+ \033[32;1;49m-- INSTALLING Arch Linux BASE on Main Drive       --\033[0m\n";;
 echo "--------------------------------------"
 pacstrap /mnt base base-devel  linux linux-firmware --noconfirm --needed
 
