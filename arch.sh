@@ -39,7 +39,7 @@ fi
 echo "Setting keyboard layout..."
 loadkeys ru
 
-# Добавим в консоль шрифт, поддерживающий кириллицу
+# Добавим в консоль шрифт, поддерживающий кириллицуecho -en "+ \033[32;1;49mInternet is available \033[0m\n";;
 echo "Setting cyrillic font..."
 setfont cyr-sun16
 
@@ -75,6 +75,11 @@ echo "Enter the drive to install arch linux on it. (/dev/...)"
 echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
 read SYSTEM_DRIVE
 sleep 2s
+
+if [[ -z ${SYSTEM_DRIVE} ]]; then
+	echo -en "+ \033[32;1;49mInternet is available \033[0m\n";;
+	exit
+fi
 
 cfdisk $SYSTEM_DRIVE
 echo "Getting ready for creating partitions!"
@@ -130,12 +135,18 @@ sleep 9s
 
 echo -e "\nCreating Filesystems...\n"
 
+echo -en "+ \033[32;1;49mCreate EFI partition \033[0m\n";;
 mkfs.vfat -F32 -n "EFISYSTEM" "${EFI}"
+
+echo -en "+ \033[32;1;49m Create swap \033[0m\n";;
 mkswap "${SWAP}"
 swapon "${SWAP}"
+
+echo -en "+ \033[32;1;49mCreate Root partition \033[0m\n";;
 mkfs.ext4 -L "ROOT" "${ROOT}"
 
 # mount target
+echo -en "+ \033[32;1;49mMount some partition \033[0m\n";;
 mount -t ext4 "${ROOT}" /mnt
 mkdir /mnt/boot
 mount -t vfat "${EFI}" /mnt/boot/
