@@ -39,7 +39,7 @@ fi
 echo "Setting keyboard layout..."
 loadkeys ru
 
-# Добавим в консоль шрифт, поддерживающий кириллицуecho -en "+ \033[32;1;49mInternet is available \033[0m\n";;
+# Добавим в консоль шрифт, поддерживающий кириллицу
 echo "Setting cyrillic font..."
 setfont cyr-sun16
 
@@ -76,17 +76,21 @@ echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar
 read SYSTEM_DRIVE
 sleep 2s
 
-if [[ -z ${SYSTEM_DRIVE} ]]; then
-	echo -en "+ \033[32;1;49mInternet is available \033[0m\n";;
-	exit
-fi
-
-cfdisk $SYSTEM_DRIVE
 echo "Getting ready for creating partitions!"
 echo "root and boot partitions are mandatory."
 echo "home and swap partitions are optional but recommended!"
 echo "Also, you can create a separate partition for timeshift backup (optional)!"
 echo "Getting ready in 5 seconds"
+
+if [[ -z ${SYSTEM_DRIVE} ]]; then
+	echo -en "+ \033[32;1;49mDevice name is incorrect \033[0m\n"
+	exit
+elif [[ "$SYSTEM_DRIVE" == "nvme0n"[1-9] ]]; then
+	cfdisk $SYSTEM_DRIVE
+elif [[ "$disk" == "sd"[a-z] ]]; then
+	cfdisk $SYSTEM_DRIVE
+fi
+
 sleep 5s
 
 echo "Please enter EFI paritition: (example /dev/sda1 or /dev/nvme0n1p1)"
@@ -135,14 +139,14 @@ sleep 9s
 
 echo -e "\nCreating Filesystems...\n"
 
-echo -en "+ \033[32;1;49mCreate EFI partition \033[0m\n";;
+echo -en "+ \033[32;1;49mCreate EFI partition \033[0m\n" 
 mkfs.vfat -F32 -n "EFISYSTEM" "${EFI}"
 
-echo -en "+ \033[32;1;49m Create swap \033[0m\n";;
+echo -en "+ \033[32;1;49m Create swap \033[0m\n" 
 mkswap "${SWAP}"
 swapon "${SWAP}"
 
-echo -en "+ \033[32;1;49mCreate Root partition \033[0m\n";;
+echo -en "+ \033[32;1;49mCreate Root partition \033[0m\n" 
 mkfs.ext4 -L "ROOT" "${ROOT}"
 
 # mount target
@@ -158,7 +162,7 @@ cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.old
 reflector --country 'Russia' -f 10  --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 echo "--------------------------------------"
-echo -en "+ \033[32;1;49m-- INSTALLING Arch Linux BASE on Main Drive       --\033[0m\n";;
+echo -en "+ \033[32;1;49m-- INSTALLING Arch Linux BASE on Main Drive       --\033[0m\n"
 echo "--------------------------------------"
 pacstrap /mnt base base-devel  linux linux-firmware --noconfirm --needed
 
@@ -170,17 +174,7 @@ pacstrap /mnt networkmanager network-manager-applet wireless_tools nano $ucode b
 
 # fstab
 genfstab -U /mnt >> /mnt/etc/fstab
-sleep 10s
-
-#bootctl install --path /mnt/boot
-#echo "default arch.conf" >> /mnt/boot/loader/loader.conf
-#cat <<EOF > /mnt/boot/loader/entries/arch.conf
-#title Arch Linux
-#linux /vmlinuz-linux
-#initrd /initramfs-linux.img
-#options root=${ROOT} rw
-#EOF
-
+sleep 5s
 
 cat <<REALEND > /mnt/next.sh
 echo "Change password to root...."
@@ -226,11 +220,14 @@ sleep 5s
 sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 5/g' /etc/pacman.conf
 sed -i 's/#[multilib]/[multilib]/g' /etc/pacman.conf
 sed -i 's/#Include = /etc/pacman.d/mirrorlist/Include = /etc/pacman.d/mirrorlist/g'  /etc/pacman.conf
+
 echo "--------------------------------------"
 echo "-- Bootloader Installation          --"
 echo "--------------------------------------"
 
 pacman -Syy
+if [[ $BOOTLOADER == '1' ]]
+then
 pacman -S  grub  efibootmgr os-prober --noconfirm --needed
 sleep 5s
 grub-install --target=x86_64-efi --efi-directory=/boot    --bootloader-id=ARCH
@@ -238,9 +235,20 @@ sleep 5s
 sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
+else [[ $BOOTLOADER == '2' ]]
+then
+bootctl install --path /mnt/boot
+echo "default arch.conf" >> /mnt/boot/loader/loader.conf
+cat <<EOF > /mnt/boot/loader/entries/arch.conf
+title Arch Linux
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+options root=${ROOT} rw
+EOF
+fi
 
 echo "-------------------------------------------------"
-echo "Display and Audio Drivers"
+echo -en "+ \033[32;1;49mDisplay and audio drivers \033[0m\n"
 echo "-------------------------------------------------"
 
 pacman -S xorg
