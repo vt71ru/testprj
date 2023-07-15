@@ -76,12 +76,6 @@ echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar
 read SYSTEM_DRIVE
 sleep 2s
 
-echo "Getting ready for creating partitions!"
-echo "root and boot partitions are mandatory."
-echo "home and swap partitions are optional but recommended!"
-echo "Also, you can create a separate partition for timeshift backup (optional)!"
-echo "Getting ready in 5 seconds"
-
 if [[ -z ${SYSTEM_DRIVE} ]]; then
 	echo -en "+ \033[32;1;49mDevice name is incorrect \033[0m\n"
 	exit
@@ -116,7 +110,7 @@ read HOSTNAME
 
 echo "Please choose boot loader for you system"
 echo "1. Grub2"
-echo "2. Refind"
+echo "2. Bootctl"
 read BOOTLOADER
 
 echo "Please choose Your Desktop Environment"
