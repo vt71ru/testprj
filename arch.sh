@@ -204,7 +204,7 @@ echo "--------------------------------------"
 echo "-- Edit pacman.conf                 --"
 echo "--------------------------------------"
 sleep 5s
-sudo sed '/ParallelDownloads/s/^#//g' -o /etc/pacman.conf
+sudo sed 's/#ParallelDownloads = 5/ParallelDownloads =5/g' /etc/pacman.conf
 sudo sed -i 's/#[multilib]/[multilib]/g' /etc/pacman.conf
 sudo sed -i 's/#Include = /etc/pacman.d/mirrorlist/Include = /etc/pacman.d/mirrorlist/g'  /etc/pacman.conf
 #
@@ -213,7 +213,7 @@ echo "-- Bootloader Installation          --"
 echo "--------------------------------------"
 
 sudo pacman -Syy
-if [[ $BOOTLOADER == '1' ]]
+if [[ $BOOTLOADER == '1' ]];
 then
 sudo pacman -S  grub  efibootmgr os-prober --noconfirm --needed
 sleep 5s
@@ -222,7 +222,7 @@ sleep 5s
 sudo sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
-else [[ $BOOTLOADER == '2' ]]
+else [[ $BOOTLOADER == '2' ]];
 then
 bootctl install --path /mnt/boot
 echo "default arch.conf" >> /mnt/boot/loader/loader.conf
