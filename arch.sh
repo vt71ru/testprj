@@ -63,7 +63,6 @@ dialog --defaultno \
         It will just DESTROY EVERYTHING on the hard disk of your choice. \n\n\
         Don't say YES if you are not sure about what you're doing! \n\n\
         Are you sure?"  15 60 || exit
-}
 
 lsblk
 echo "Enter the drive to install arch linux on it. (/dev/...)"
@@ -205,7 +204,7 @@ echo "--------------------------------------"
 echo "-- Edit pacman.conf                 --"
 echo "--------------------------------------"
 sleep 5s
-sudo sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 5/g' /etc/pacman.conf
+sudo sed '/ParallelDownloads/s/^#//g' -o /etc/pacman.conf
 sudo sed -i 's/#[multilib]/[multilib]/g' /etc/pacman.conf
 sudo sed -i 's/#Include = /etc/pacman.d/mirrorlist/Include = /etc/pacman.d/mirrorlist/g'  /etc/pacman.conf
 #
