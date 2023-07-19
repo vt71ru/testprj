@@ -57,6 +57,14 @@ fi
 
 main() {
 
+dialog --defaultno \
+        --title "Are you sure?" \
+        --yesno "This is my personnal arch linux install. \n\n\
+        It will just DESTROY EVERYTHING on the hard disk of your choice. \n\n\
+        Don't say YES if you are not sure about what you're doing! \n\n\
+        Are you sure?"  15 60 || exit
+}
+
 lsblk
 echo "Enter the drive to install arch linux on it. (/dev/...)"
 echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
