@@ -204,7 +204,7 @@ echo "--------------------------------------"
 echo "-- Edit pacman.conf                 --"
 echo "--------------------------------------"
 sleep 5s
-sudo sed 's/#ParallelDownloads = 5/ParallelDownloads =5/g' /etc/pacman.conf
+sudo sed -i 's/#ParallelDownloads = 5/ParallelDownloads =5/g' /etc/pacman.conf
 sudo sed -i 's/#[multilib]/[multilib]/g' /etc/pacman.conf
 sudo sed -i 's/#Include = /etc/pacman.d/mirrorlist/Include = /etc/pacman.d/mirrorlist/g'  /etc/pacman.conf
 #
