@@ -102,10 +102,21 @@ read PASSWORD
 echo "Please enter hostname"
 read HOSTNAME
 
-echo "Please choose boot loader for you system"
-echo "1. Grub2"
-echo "2. Bootctl"
-read BOOTLOADER
+#echo "Please choose boot loader for you system"
+#echo "1. Grub2"
+#echo "2. Bootctl"
+#read BOOTLOADER
+for i in $(dialog --checklist "A menu of choices bootloader" 0 0 0 grub grub bootloader\ 1 off bootctl bootctl bootloader\ 2 off )
+do 
+	case $i in
+		a)
+			BOOTLOADER=grub
+			;;
+		b)
+			BOOTLOADER=bootctl
+			;;
+	esac
+done
 
 echo "Please choose Your Desktop Environment"
 echo "1. GNOME"
@@ -213,7 +224,7 @@ echo "-- Bootloader Installation          --"
 echo "--------------------------------------"
 
 sudo pacman -Syy
-if [[ $BOOTLOADER == '1' ]]
+if [[ $BOOTLOADER == '1' ]];
 then
 	sudo pacman -S  grub  efibootmgr os-prober --noconfirm --needed
 	sleep 5s
@@ -222,7 +233,7 @@ then
 sudo sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
-elif [[ $BOOTLOADER == '2' ]]
+elif [[ $BOOTLOADER == '2' ]];
 then
 	bootctl install --path /mnt/boot
 	echo "default arch.conf" >> /mnt/boot/loader/loader.conf
@@ -232,8 +243,6 @@ then
 	initrd /initramfs-linux.img
 	options root=${ROOT} rw
 	EOF
-else
-	echo "Boot loaader not def."
 fi
 
 #echo "-------------------------------------------------"
