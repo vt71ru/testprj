@@ -213,25 +213,27 @@ echo "-- Bootloader Installation          --"
 echo "--------------------------------------"
 
 sudo pacman -Syy
-if [[ $BOOTLOADER == '1' ]];
+if [[ $BOOTLOADER == '1' ]]
 then
-sudo pacman -S  grub  efibootmgr os-prober --noconfirm --needed
-sleep 5s
-sudo grub-install --target=x86_64-efi --efi-directory=/boot    --bootloader-id=ARCH
-sleep 5s
+	sudo pacman -S  grub  efibootmgr os-prober --noconfirm --needed
+	sleep 5s
+	sudo grub-install --target=x86_64-efi --efi-directory=/boot    --bootloader-id=ARCH
+	sleep 5s
 sudo sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
-else [[ $BOOTLOADER == '2' ]];
+elif [[ $BOOTLOADER == '2' ]]
 then
-bootctl install --path /mnt/boot
-echo "default arch.conf" >> /mnt/boot/loader/loader.conf
-cat <<EOF > /mnt/boot/loader/entries/arch.conf
-title Arch Linux
-linux /vmlinuz-linux
-initrd /initramfs-linux.img
-options root=${ROOT} rw
-EOF
+	bootctl install --path /mnt/boot
+	echo "default arch.conf" >> /mnt/boot/loader/loader.conf
+	cat <<EOF > /mnt/boot/loader/entries/arch.conf
+	title Arch Linux
+	linux /vmlinuz-linux
+	initrd /initramfs-linux.img
+	options root=${ROOT} rw
+	EOF
+else
+	echo "Boot loaader not def."
 fi
 
 #echo "-------------------------------------------------"
