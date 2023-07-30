@@ -35,3 +35,9 @@ sudo systemctl enable fstrim.timer
 git clone https://aur.archlinux.org/stacer-bin.git
 cd stacer-bin 
 makepkg -sric
+
+#Install visual studio code
+pacman -S visual-studio-code-bin
+
+pacman -S vlc gimp blender dolphin libreoffice-fresh rxvt-unicode firefox firefox-i18n-ru
+yaourt -S telegram-desktop
