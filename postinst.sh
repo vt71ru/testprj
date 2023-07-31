@@ -36,6 +36,7 @@ vim /etc/pacman.conf
 #Add ILoveCandy to end of file
 
 # Install Another auto nice daemon, with community rules support
+yay -S auto-cpufreq
 yaourt -Ss ananicy
 sudo systemctl enable ananicy
 
